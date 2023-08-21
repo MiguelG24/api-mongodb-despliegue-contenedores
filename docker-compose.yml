@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  mongodb:
+    build: servicesData/mongodb/
+    image: migueldeveloper/mongodb-service:0.0.1-snapshot
+    environment:
+      - MONGO_INITDB_DATABASE=dbpersonas
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - 27017:27017
+    volumes:
+      - ./blockstorage/mongodb:/data/db
+  api-personas-mongodb:
+    build: api-personas-mongodb/build/libs
+    image: migueldeveloper/api-personas-mongodb:0.0.1-snapshot
+    environment:
+      - SPRING_DATA_MONGODB_HOST=localhost
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_USERNAME=admin
+      - SPRING_DATA_MONGODB_PASSWORD=admin
+      - SPRING_DATA_MONGODB_DATABASE=dbpersonas
+      - SPRING_DATA_MONGODB_URI=mongodb://admin:admin@mongodb:27017/?directConnection=true&serverSelectionTimeoutMS=2000
+    ports:
+      - 8085:8085
+    depends_on:
+      - mongodb
